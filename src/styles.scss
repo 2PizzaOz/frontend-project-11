@@ -1,5 +1,13 @@
 $base-color: #c6538c;
 
-body {
+body main {
     background-color: $base-color;
 }
+
+input:focus {
+    outline: none;
+  }
+  
+  input {
+    border: 1px solid; 
+  }

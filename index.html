@@ -9,13 +9,14 @@
         <main>
         <h1>RSS агрегатор</h1>
         <p>Начните читать RSS сегодня! Это легко это красиво.</p>
-        <form action="">
-            <div>
-                <input type="text", placeholder="Сылка RSS">
-                <label for="">Сылка RSS</label>
+        <form action class="rss-form text body">
+            <div class="from-group">
+                <label for="url-input">Сылка RSS</label>
+                <input id="url-input" placeholder="Сылка RSS" name="URL">
+                <div class="errors"></div>
             </div>
             <div>
-                <button>Добавить</button>
+                <button type="submit">Добавить</button>
             </div>
         </form>
         <script src="./index.js"></script>
