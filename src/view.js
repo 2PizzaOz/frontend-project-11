@@ -1,45 +1,103 @@
 import * as yup from 'yup';
+import { setLocale } from 'yup';
+import i18next from "i18next";
+import './i18n.js';
 import onChange from 'on-change';
-
 
 const formEl = document.querySelector('form');
 const inputEl = document.querySelector('#url-input');
-const butEl = document.querySelector('button');
 
 
 const formData = {
   website: '',
-  validForm: ''
+  validate: '',
 }
 
-const userSchema = yup.object().shape({
-  website: yup.string().required().url().nullable().matches(),
-})
+
+const watchedObj = onChange(formData, () => {});
+
+
+setLocale({
+  mixed: {
+    required: ({ required }) => ({ key: inputEl.nextElementSibling.textContent = i18next.t('err.req') , values: { required } }),
+  },
+  string: {
+    url: ({ url }) => ({ key: inputEl.nextElementSibling.textContent = i18next.t('err.url') , values: { url } }),
+  },
+});
+
+let schema = yup.object().shape({
+  website: yup.string().required().url().nullable().matches()
+});
 
 formEl.addEventListener('submit', async (even) => {
   even.preventDefault();
-  formData.website = even.target[0].value
-  const isValid = await userSchema.isValid(formData)
+  formData.website = even.target[0].value;
+  const isValid = await schema.isValid(formData);
+
+  watchedObj.validate = isValid;
+  watchedObj.website = inputEl.value;
+
+  console.log('isValid',isValid);
+  console.log('formData',formData);
+
+  try {
+    await schema.validate({website: watchedObj.website});
+  } catch (err) {
+  err.errors.map((err) => i18next.t(err.key));
+  }
+})
+
+
+
+
+//______________________РАБОЧАЯ______________________________________________________________________
+
+// import * as yup from 'yup';
+// import onChange from 'on-change';
+
+
+// const formEl = document.querySelector('form');
+// const inputEl = document.querySelector('#url-input');
+// const butEl = document.querySelector('button');
+
+
+// const formData = {
+//   website: '',
+//   validForm: ''
+// }
+
+// const userSchema = yup.object().shape({
+//   website: yup.string().required().min(30).url().nullable().matches(),
+// })
+
+
+
+
+// formEl.addEventListener('submit', async (even) => {
+//   even.preventDefault();
+//   formData.website = even.target[0].value
+//   const isValid = await userSchema.isValid(formData)
   
-  watchedObj.validForm = isValid
-  watchedObj.website = inputEl.value
+//   watchedObj.validForm = isValid
+//   watchedObj.website = inputEl.value
 
-  checkFormValidation(watchedObj)
-  })
+//   checkFormValidation(watchedObj)
+//   })
 
-const watchedObj = onChange(formData, () => {
+// const watchedObj = onChange(formData, () => {
 
-});
+// });
 
-const checkFormValidation = (watchedObj) => {
-  if(!watchedObj.validForm) {
-    watchedObj.website === ''? console.log('ПУСТАЯ СТРОКА') : console.log('НЕПРАВИЛЬНЫЙ УРЛ')
-  } else {console.log('ФОРМА ОТПРАВЛЕНА')}
-}
+// const checkFormValidation = (watchedObj) => {
+//   if(!watchedObj.validForm) {
+//     watchedObj.website === ''? console.log('ПУСТАЯ СТРОКА') : console.log('НЕПРАВИЛЬНЫЙ УРЛ')
+//   } else {console.log('ФОРМА ОТПРАВЛЕНА')}
+// }
 
-console.log(formData)
+// console.log(formData)
 
-
+//____________________________РАЬОЧАЯ_______________________________________________________^^^^
 
 
 

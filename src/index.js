@@ -1,6 +1,5 @@
 import './styles.scss';
 import './view.js'
+import './i18n.js';
 
 
-console.log('hiisseseseii')
-console.log('adad')
