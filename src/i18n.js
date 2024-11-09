@@ -22,5 +22,3 @@ i18next.init({
 // document.querySelector('h1').textContent = i18next.t('main.h1');
 // console.log('18n', i18next.t('main.h1'))
 // console.log('H1',document.querySelector('h1'))
-
-  

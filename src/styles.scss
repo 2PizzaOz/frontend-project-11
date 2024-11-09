@@ -1,13 +1,5 @@
-$base-color: #c6538c;
+@import "~bootstrap/scss/bootstrap"; 
 
-body main {
-    background-color: $base-color;
+body {
+    background-color: rgb(128, 128, 128);
 }
-
-input:focus {
-    outline: none;
-  }
-  
-  input {
-    border: 1px solid; 
-  }
