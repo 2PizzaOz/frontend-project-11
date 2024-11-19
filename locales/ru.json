@@ -6,7 +6,9 @@
     "err": {
         "min": "ОЩИБКААА из JSON",
         "req": "Обезательная из Json",
-        "url": "Не УРЛ Json"
+        "url": "Не УРЛ Json",
+        "add": "RSS успешно загружен",
+        "ebb": "RSS ddddd"
     }
 }
 
