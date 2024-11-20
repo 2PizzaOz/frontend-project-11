@@ -46,7 +46,7 @@ const feedbackErr = (formData) => {
 
 const formData = {
   website: '', 
-  posts: {
+    posts: {
     title: [],
     descr: '',
     item: [],
@@ -62,79 +62,65 @@ const formData = {
 }
 
 
-const watchedObj = onChange(formData, (a, b, c, d) => {
-  console.log('66',{ a, b, c, d })
-  
-  
-});
+const watchedObj = onChange(formData, () => {});
 
 
 setLocale({
   mixed: {
     required: ({ required }) => ({ key: pEleemFeedback.textContent = i18next.t('err.req') , values: { required } }),
+    notOneOf: ({ notOneOf }) => ({ key: pEleemFeedback.textContent = i18next.t('err.ebb') , values: { notOneOf } }),
   },
   string: {
     url: ({ url }) => ({ key: pEleemFeedback.textContent = i18next.t('err.url') , values: { url } }),
-    notOneOf: 'err',
-    // notOneOf: ({ notOneOf }) => ({ key: pEleemFeedback.textContent = i18next.t('err.ebb') , values: { notOneOf } }),
   },
 });
 
-// console.log('77', formData)
-
-let schema = yup.object({
-  website: yup.string().notOneOf(formData.dubl)
-});
 
 
 
-formEl.addEventListener('submit', async (event) => {
-  event.preventDefault();
 
+formEl.addEventListener('submit', async (even) => {
+  even.preventDefault();
+
+  let schema = yup.object().shape({
+    website: yup.string().required().url().nullable().matches().notOneOf(formData.dubl)
+  });
+  formData.website = even.target[0].value;
   
-  // console.log('90', JSON.stringify(formData, null, 2))
-  const newWebsite = event.target[0].value;
-  // const isValid = await schema.isValid(formData);
-  // console.log('99', isValid)
+  const isValid = await schema.isValid(formData);
 
-  watchedObj.dubl.push(newWebsite);
-  watchedObj.website = newWebsite;
-  // console.log('94', JSON.stringify(formData, null, 2))
-
-  // const isValid = schema.isValidSync(watchedObj);
+  watchedObj.validate = isValid;
+  watchedObj.website = inputEl.value;
 
 
+
+  watchedObj.dubl.push(formData.website)
+  
   
 
   
-
- 
- 
-  // const isValid = await schema.isValid(formData);
   
-  // watchedObj.validate = isValid;
-  // watchedObj.website = inputEl.value;
 
 
-
+  console.log('isValid',isValid);
+  console.log('formData',formData);
 
   try {
-    const result = await schema.validate(formData);
-    console.log('120', result);
+    await schema.validate({website: watchedObj.website});
   } catch (err) {
     
   err.errors.map((err) => i18next.t(err.key));
   watchedObj.err = false // Как можно исправить?
   feedbackErr(formData) // Как можно исправить?
   }
-  // if(isValid) {
-  //   requestRRS(formData.website)
-  //   pEleemFeedback.textContent = i18next.t('err.add')
-  //   watchedObj.err = true // Как можно исправить?
-  //   formEl.reset()
-  //   feedbackErr(formData) // Как можно исправить?
+  if(isValid) {
+    requestRRS(formData.website)
+    pEleemFeedback.textContent = i18next.t('err.add')
+    watchedObj.err = true // Как можно исправить?
+    formEl.reset()
+    feedbackErr(formData) // Как можно исправить?
 
-  // }
+  }
 })
 
 
@@ -233,7 +219,7 @@ const fidElem = (formData) => {
  
   fidE.append(divElemF);
   watchedObj.posts.fid.push(titleElem.textContent)
-  // flowCheck(formData.posts.flowWebsite)
+  flowCheck(formData.posts.flowWebsite)
 }
 let idIndex = -1;
 
@@ -355,17 +341,17 @@ const modal = (formData) => {
   
 
 
-// const flowCheck = (flows) => {
+const flowCheck = (flows) => {
   
-//   // console.log('ЧТО ТУТ flowsflows ПРОИСХОДИТ!!!',flows)
-//   flows.forEach(flow => {
-//     console.log('ЧТО ТУТ flowsflows ПРОИСХОДИТ!!!',flow)
-//     requestRRS(flow)
-//   })
+  // console.log('ЧТО ТУТ flowsflows ПРОИСХОДИТ!!!',flows)
+  flows.forEach(flow => {
+    console.log('ЧТО ТУТ flowsflows ПРОИСХОДИТ!!!',flow)
+    requestRRS(flow)
+  })
 
 
-// setTimeout(flowCheck, 5000, formData.posts.flowWebsite)
-// }
+setTimeout(flowCheck, 5000, formData.posts.flowWebsite)
+}
 
 
 
