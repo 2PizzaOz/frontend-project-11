@@ -223,13 +223,11 @@ const fidElem = (formData) => {
 }
 let idIndex = -1;
 
+
 const postElem = (formData) => {
   const itemElem = formData.posts.item;
   const rowURLDiv = document.querySelector('#rowURL');
 
-  
-  
-  
   divElemLast.append(h2Elem);
   divElemSecond.append(divElemLast);
   divElemSecond.append(ulElem);
@@ -241,7 +239,7 @@ const postElem = (formData) => {
       const titleE = element.querySelector('title');
       const dickE = element.querySelector('description');
       
-      // console.log('ЧТО В СТРОКЕ dickE',dickE)
+      
       
       
       
@@ -278,7 +276,11 @@ const postElem = (formData) => {
       aE.setAttribute("rel", "noopener noreferrer")
       aE.setAttribute("data-id", idIndex)
       
-
+      aE.addEventListener('click', () => {
+        aE.classList.remove("fw-bold")
+        aE.classList.add("fw-normal", "link-secondary")
+      })
+      
       aE.textContent = titleE.textContent;
 //___________________________________________________________modal
 // butE.addEventListener('click', (t) => {
@@ -305,11 +307,17 @@ const postElem = (formData) => {
       ulElem.append(liE);
       liE.append(butE)
       
-      watchedObj.modal.push({id: idIndex, link: linkE.textContent, title: titleE.textContent, dick: dickE.textContent})
+      watchedObj.modal.push({id: idIndex, link: linkE.textContent, title: titleE.textContent, dick: dickE.textContent, aElementClass: aE})
 
       
     })
 }
+
+
+
+
+
+
 
 
 const modal = (formData) => {
@@ -327,12 +335,22 @@ const modal = (formData) => {
       const modalTitle = exampleModal.querySelector('.modal-title')
       const modalBodyInput = exampleModal.querySelector('.modal-body')
       const modalbuten = exampleModal.querySelector(".btn")
-  
+
+
+      
+
       const modal = formData.modal[recipient]
-      console.log('MODALLL!!!!!!!!',modal)
+
+     
+      const aElem = modal.aElementClass
+      aElem.classList.remove("fw-bold")
+      aElem.classList.add("fw-normal", "link-secondary")
+
+
       modalTitle.textContent = modal.title
       modalbuten.setAttribute("href", modal.link)
       modalBodyInput.textContent = modal.dick
+      
     })
   }
   }
