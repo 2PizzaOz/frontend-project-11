@@ -41,8 +41,8 @@ const h2Elem = document.createElement('h2');
 h2Elem.setAttribute('class', 'card-title h4');
 h2Elem.textContent = 'Посты';
 
-const feedbackErr = (formData) => {
-  if (formData.err) {
+const feedbackErr = (obj) => {
+  if (obj.err) {
     pEleemFeedback.setAttribute('class', 'feedback m-0 position-absolute small text-success');
   } else {
     pEleemFeedback.setAttribute('class', 'feedback m-0 position-absolute smail text-danger');
@@ -78,18 +78,6 @@ setLocale({
   },
 });
 /* eslint-enable */
-const parsingRRS = (response) => {
-  const parser = new DOMParser();
-  const domElem = parser.parseFromString(response.data.contents, 'image/svg+xml');
-
-  watchedObj.posts.title = domElem.querySelector('title');
-  watchedObj.posts.descr = domElem.querySelector('description');
-  watchedObj.posts.item = domElem.querySelectorAll('item');
-  watchedObj.posts.itemDescription = domElem.querySelectorAll('item description');
-
-  watchedObj.posts.flowWebsite.push(formData.website);
-  filterDom(formData);
-};
 
 const fidElem = (obj) => {
   const testProw = obj.posts.fid;
@@ -116,7 +104,6 @@ const fidElem = (obj) => {
 
   fidE.append(divElemF);
   watchedObj.posts.fid.push(titleElem.textContent);
-  flowCheck(obj.posts.flowWebsite);
 };
 
 let idIndex = -1;
@@ -179,6 +166,20 @@ const postElem = (obj) => {
   });
 };
 
+const parsingRRS = (response) => {
+  const parser = new DOMParser();
+  const domElem = parser.parseFromString(response.data.contents, 'image/svg+xml');
+
+  watchedObj.posts.title = domElem.querySelector('title');
+  watchedObj.posts.descr = domElem.querySelector('description');
+  watchedObj.posts.item = domElem.querySelectorAll('item');
+  watchedObj.posts.itemDescription = domElem.querySelectorAll('item description');
+
+  watchedObj.posts.flowWebsite.push(formData.website);
+  postElem(formData);
+  fidElem(formData);
+};
+
 const requestRRS = (website) => {
   axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(website)}`)
     .then((response) => {
@@ -228,25 +229,7 @@ const flowCheck = (flows) => {
   setTimeout(flowCheck, 5000, formData.posts.flowWebsite);
 };
 
-const filterDom = (obj) => {
-  const testProw = obj.posts.fid;
-
-  const itemElem = obj.posts.item;
-  if (testProw.length === 0) {
-    postElem(obj);
-    fidElem(obj);
-  } else {
-    itemElem.forEach((element) => {
-      const titleE = element.querySelector('title');
-      const test = obj.posts.str;
-      if (test.includes(titleE.textContent)) {
-        return;
-      }
-      postElem(obj);
-      fidElem(obj);
-    });
-  }
-};
+flowCheck(formData.posts.flowWebsite);
 
 const modale = (obj) => {
   const exampleModal = document.getElementById('modal');
