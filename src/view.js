@@ -110,6 +110,9 @@ let idIndex = -1;
 
 const postElem = (obj) => {
   const itemElem = obj.posts.item;
+  if (itemElem.length === 0) {
+    return;
+  }
   const rowURLDiv = document.querySelector('#rowURL');
 
   divElemSecond.append(h2Elem);
@@ -175,19 +178,40 @@ const parsingRRS = (response) => {
   watchedObj.posts.item = domElem.querySelectorAll('item');
   watchedObj.posts.itemDescription = domElem.querySelectorAll('item description');
 
-  watchedObj.posts.flowWebsite.push(formData.website);
   postElem(formData);
   fidElem(formData);
 };
 
-const requestRRS = (website) => {
+const requestRRS = (website, test = '') => {
   axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(website)}`)
     .then((response) => {
       parsingRRS(response);
+      if (test !== '') {
+        pEleemFeedback.textContent = i18next.t('err.add');
+        watchedObj.posts.flowWebsite.push(formData.website);
+        watchedObj.dubl.push(formData.website);
+        formEl.reset();
+        watchedObj.err = true;
+        feedbackErr(formData);
+      }
     })
     .catch((error) => {
-      console.log('ошибка аксису', error);
+      console.log('Ресурс не содержит валидный RSS', error.name);
+      watchedObj.err = false;
+      feedbackErr(formData);
+      if (error.name === 'TypeError') {
+        pEleemFeedback.textContent = i18next.t('err.notAdd');
+      } else {
+        pEleemFeedback.textContent = i18next.t('err.inet');
+      }
     });
+};
+
+const flowCheck = (flows) => {
+  flows.forEach((flow) => {
+    requestRRS(flow);
+  });
+  setTimeout(flowCheck, 5000, formData.posts.flowWebsite);
 };
 
 formEl.addEventListener('submit', async (even) => {
@@ -209,29 +233,18 @@ formEl.addEventListener('submit', async (even) => {
 
   try {
     await schema.validate({ website: watchedObj.website });
-    watchedObj.dubl.push(formData.website);
-    requestRRS(formData.website);
-    pEleemFeedback.textContent = i18next.t('err.add');
-    watchedObj.err = true;
-    formEl.reset();
-    feedbackErr(formData);
+    requestRRS(formData.website, '1');
+    inputEl.classList.remove('is-invalid');
   } catch (errs) {
     errs.errors.map((err) => i18next.t(err.key));
     watchedObj.err = false;
     feedbackErr(formData);
+    inputEl.classList.add('is-invalid');
   }
 });
 
-const flowCheck = (flows) => {
-  flows.forEach((flow) => {
-    requestRRS(flow);
-  });
-  setTimeout(flowCheck, 5000, formData.posts.flowWebsite);
-};
-
-flowCheck(formData.posts.flowWebsite);
-
 const modale = (obj) => {
+  flowCheck(formData.posts.flowWebsite);
   const exampleModal = document.getElementById('modal');
   if (exampleModal) {
     exampleModal.addEventListener('show.bs.modal', (event) => {
